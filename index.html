@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login/Register System</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    .hidden {
+      display: none;
+    }
+    iframe {
+      width: 100%;
+      height: 90vh;
+      border: none;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 id="title">Welcome</h2>
+
+  <!-- Navigation Page -->
+  <div id="navPage" class="container">
+    <button onclick="showPage('login')">Login</button>
+    <button onclick="showPage('register')">Register</button>
+  </div>
+
+  <!-- Login Page -->
+  <div id="loginPage" class="container hidden">
+    <h3>Login</h3>
+    <input type="text" id="loginUsername" placeholder="Username">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="showPage('register')">Go to Register</button>
+  </div>
+
+  <!-- Register Page -->
+  <div id="registerPage" class="container hidden">
+    <h3>Register</h3>
+    <input type="text" id="regUsername" placeholder="Username">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <button onclick="showPage('login')">Go to Login</button>
+  </div>
+
+  <!-- Game Frame -->
+  <div id="gameFrame" class="hidden">
+    <iframe src="game.html"></iframe>
+  </div>
+
+  <script>
+    function showPage(page) {
+      document.getElementById('navPage').classList.add('hidden');
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('registerPage').classList.add('hidden');
+      document.getElementById('gameFrame').classList.add('hidden');
+
+      if (page === 'login') {
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('title').textContent = "Login";
+      } else if (page === 'register') {
+        document.getElementById('registerPage').classList.remove('hidden');
+        document.getElementById('title').textContent = "Register";
+      } else if (page === 'nav') {
+        document.getElementById('navPage').classList.remove('hidden');
+        document.getElementById('title').textContent = "Welcome";
+      } else if (page === 'game') {
+        document.getElementById('gameFrame').classList.remove('hidden');
+        document.getElementById('title').textContent = "Game";
+      }
+    }
+
+    function register() {
+      const user = document.getElementById("regUsername").value;
+      const pass = document.getElementById("regPassword").value;
+
+      if (!user || !pass) return alert("Please fill in both fields.");
+
+      localStorage.setItem("user", user);
+      localStorage.setItem("pass", pass);
+
+      alert("Registered successfully! Now log in.");
+      showPage('login');
+    }
+
+    function login() {
+      const user = document.getElementById("loginUsername").value;
+      const pass = document.getElementById("loginPassword").value;
+
+      const storedUser = localStorage.getItem("user");
+      const storedPass = localStorage.getItem("pass");
+
+      if (user === storedUser && pass === storedPass) {
+        showPage('game');
+      } else {
+        alert("Incorrect username or password. Reloading...");
+        location.reload(); // kick them out
+      }
+    }
+
+    // On load, show the nav page
+    window.onload = () => {
+      showPage('nav');
+    }
+  </script>
+
+</body>
+</html>
